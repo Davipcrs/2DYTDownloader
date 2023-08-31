@@ -1,17 +1,24 @@
 from pytube import YouTube
 from model.stringFile import StringClass
-import json
+from model.path import PathModel
 
 
 class YoutubeController():
     def __init__(self):
         self._yt = None
+        self._selectedStream = None
+        self._path = PathModel()
+
+    def _calculatePercentage(self, remaining, total):
+        perc = (float(remaining) / float(total)) * 100
+        return perc
 
     def setVideoLink(self, link=None):
         while link == None or link == '':
             link = input('Video link: ')
 
-        self._yt = YouTube(link)
+        self._yt = YouTube(link, on_progress_callback=self.onProgress,
+                           on_complete_callback=self.onComplete)
 
     def getVideoLink(self):
         if self._yt == None:
@@ -19,25 +26,43 @@ class YoutubeController():
 
         return self._yt.watch_url
 
-    def listVideoResolutions(self):
-        if self._yt == None:
-            return StringClass().noVideoSelected
+    def setVideoQuality(self, itag):
+        self._selectedStream = self._yt.streams.get_by_itag(itag)
 
-        streams = self._yt.streams.filter(
-            type='video', file_extension='mp4').order_by(attribute_name='resolution')
+    def getSelectedVideoQuality(self):
+        if self._selectedStream != None:
+            return self._selectedStream.resolution
 
-        streamList = list(streams)
-        auxList = []
+    def getSelectedVideoCodecs(self):
+        if self._selectedStream != None:
+            return self._selectedStream.codecs
 
-        # Make return a JSon
-        for index in range(0, streamList.__len__() - 1):
-            auxList.append(streamList[index].resolution)
+    def onProgress(self, chunk, file_handle, bytes_remaining):
+        # https://stackoverflow.com/questions/49185538/how-to-add-progress-bar
 
-        return auxList
+        size = self._selectedStream.filesize
+        remaining = size - bytes_remaining
+        print(size, remaining)
+        print(self._calculatePercentage(remaining, size))
+        # return self.percent(bytes_remaining, size)
+
+    def onComplete(self, chunk, file_handle):
+
+        pass
+
+    def downloadSelectedVideo(self, path=None):
+        if self._selectedStream == None:
+            return StringClass().noVideoQuality
+
+        if path == None:
+            path = self._path
+            path = path.appUsrDir
+
+        self._selectedStream.download(path)
 
     def jsonVideoInfo(self):
         streams = self._yt.streams.filter(
-            type='video', file_extension='mp4').order_by(attribute_name='resolution')
+            type='video').order_by(attribute_name='resolution')
 
         streamList = list(streams)
         dataKeyValue = {}
@@ -54,14 +79,3 @@ class YoutubeController():
             dataKeyValue[index] = auxDict
 
         return dataKeyValue
-
-    def selectVideoQuality(self, itag):
-        stream = self._yt.streams.get_by_itag(itag)
-        stream.download()
-
-    def onProgress():
-        # https://stackoverflow.com/questions/49185538/how-to-add-progress-bar
-        pass
-
-    def onFinish():
-        pass
