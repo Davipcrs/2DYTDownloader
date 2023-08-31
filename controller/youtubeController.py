@@ -4,10 +4,15 @@ from model.path import PathModel
 
 
 class YoutubeController():
-    def __init__(self):
+    def __init__(self, mode="CLI"):
         self._yt = None
         self._selectedStream = None
         self._path = PathModel()
+        self._mode = mode
+
+        # Download Handlers
+        self.downloadProgress = [None, None, None]
+        self.downloadComplete = False
 
     def _calculatePercentage(self, remaining, total):
         perc = (float(remaining) / float(total)) * 100
@@ -38,17 +43,22 @@ class YoutubeController():
             return self._selectedStream.codecs
 
     def onProgress(self, chunk, file_handle, bytes_remaining):
-        # https://stackoverflow.com/questions/49185538/how-to-add-progress-bar
-
         size = self._selectedStream.filesize
         remaining = size - bytes_remaining
-        print(size, remaining)
-        print(self._calculatePercentage(remaining, size))
-        # return self.percent(bytes_remaining, size)
+        self.downloadProgress[0] = self._calculatePercentage(remaining, size)
+        self.downloadProgress[1] = size
+        self.downloadProgress[2] = remaining
+
+        # if threads are implemented this will be removed
+        if self._mode == "CLI":
+            print(self.downloadProgress)
 
     def onComplete(self, chunk, file_handle):
+        self.downloadComplete = True
 
-        pass
+        # if threads are implemented this will be removed
+        if self._mode == "CLI":
+            print(self.downloadComplete)
 
     def downloadSelectedVideo(self, path=None):
         if self._selectedStream == None:
@@ -73,9 +83,30 @@ class YoutubeController():
             res = streamList[index].resolution
             videoCodec = streamList[index].video_codec
             audioCodec = streamList[index].audio_codec
+            extension = streamList[index].subtype
 
-            auxDict = dict(itag=itag, res=res,
+            auxDict = dict(itag=itag, res=res, extension=extension,
                            videoCodec=videoCodec, audioCodec=audioCodec)
+            dataKeyValue[index] = auxDict
+
+        return dataKeyValue
+
+    def jsonAudioInfo(self):
+        streams = self._yt.streams.filter(
+            only_audio=True)
+
+        streamList = list(streams)
+        dataKeyValue = {}
+        index = 0
+
+        for index in range(0, streamList.__len__() - 1):
+            itag = streamList[index].itag
+            audioCodec = streamList[index].audio_codec
+            size = streamList[index].filesize_mb
+            extension = streamList[index].subtype
+
+            auxDict = dict(itag=itag, extension=extension,
+                           audioCodec=audioCodec, size=size)
             dataKeyValue[index] = auxDict
 
         return dataKeyValue
