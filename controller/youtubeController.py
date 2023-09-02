@@ -34,7 +34,9 @@ class YoutubeController():
     # External Methods
     def setVideoLink(self, link=None):
         while link == None or link == '':
-            link = input('Video link: ')
+            # CLI vs GUI Mode implement later
+            pass
+            # link = input('Video link: ')
 
         self._yt = YouTube(link, on_progress_callback=self._onProgress,
                            on_complete_callback=self._onComplete)
@@ -44,6 +46,12 @@ class YoutubeController():
             return StringClass().noVideoSelected
 
         return self._yt.watch_url
+
+    def getVideoTitle(self):
+        if self._yt == None:
+            return StringClass().noVideoSelected
+
+        return self._yt.title
 
     def setVideoQuality(self, itag):
         self._selectedStream = self._yt.streams.get_by_itag(itag)
@@ -81,9 +89,10 @@ class YoutubeController():
             audioCodec = streamList[index].audio_codec
             extension = streamList[index].subtype
             size = streamList[index].filesize_mb
+            bitrate = streamList[index].bitrate
 
             auxDict = dict(itag=itag, res=res, extension=extension,
-                           videoCodec=videoCodec, audioCodec=audioCodec, size=size)
+                           videoCodec=videoCodec, audioCodec=audioCodec, size=size, bitrate=bitrate)
             dataKeyValue[index] = auxDict
 
         return dataKeyValue
