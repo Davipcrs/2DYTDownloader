@@ -110,9 +110,10 @@ class YoutubeController():
             audioCodec = streamList[index].audio_codec
             size = streamList[index].filesize_mb
             extension = streamList[index].subtype
+            bitrate = streamList[index].bitrate
 
             auxDict = dict(itag=itag, extension=extension,
-                           audioCodec=audioCodec, size=size)
+                           audioCodec=audioCodec, size=size, bitrate=bitrate)
             dataKeyValue[index] = auxDict
 
         return dataKeyValue

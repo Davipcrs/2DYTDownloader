@@ -1,6 +1,6 @@
-import time
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QFileDialog
 from view.ui.MainWindow_ui import Ui_MainWindow
+from view.DownloadDialog import DownloadDialog
 from controller.youtubeController import YoutubeController
 from threading import Thread
 
@@ -12,15 +12,26 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.yt = YoutubeController()
         self.data = ''
+        self.audioData = ''
         self.videoUrl = ''
+        self.audioOnlyBool = False
+        self.diferentPath = None
+        self.downloadDialog = None
+
+        # Handle Clicks
         self.ui.confirmLinkButton.clicked.connect(self._linkUpdate)
         self.ui.videoLinkLineEdit.editingFinished.connect(self._linkUpdate)
         self.ui.downloadTypeSelectionComboBox.currentIndexChanged.connect(
             self._labelData)
         self.ui.okButton.clicked.connect(self._downloadVideo)
+        self.ui.onlyAudio.stateChanged.connect(self._audioData)
+        self.ui.changeLocationButton.clicked.connect(self._changeSaveDirectory)
 
     def _fetchData(self):
         self.data = self.yt.jsonVideoInfo()
+
+    def _fetchAudioData(self):
+        self.audioData = self.yt.jsonAudioInfo()
 
     def _linkUpdate(self):
         # Add A button or add a form to 'Thread' the setVideoLink
@@ -34,8 +45,10 @@ class MainWindow(QMainWindow):
 
         if title != None or title != '':
             # https://www.pythonguis.com/tutorials/multithreading-pyside6-applications-qthreadpool/
-            th = Thread(self._fetchData())
+            th = Thread(target=self._fetchData())
             th.start()
+            th2 = Thread(target=self._fetchAudioData())
+            th2.start()
 
         self._addVideoQualityToComboBox()
         self._labelData()
@@ -45,32 +58,68 @@ class MainWindow(QMainWindow):
     def _addVideoQualityToComboBox(self):
         self.ui.downloadTypeSelectionComboBox.clear()
         aux = []
-        for i in range(0, self.data.__len__() - 1):
-            aux.append(self.data[i]['res'])
-        self.ui.downloadTypeSelectionComboBox.addItems(aux)
+        if self.audioOnlyBool == False:
+            for i in range(0, self.data.__len__() - 1):
+                aux.append(self.data[i]['res'])
+            self.ui.downloadTypeSelectionComboBox.addItems(aux)
+        else:
+            for i in range(0, self.audioData.__len__() - 1):
+                aux.append(self.data[i]['extension'])
+            self.ui.downloadTypeSelectionComboBox.addItems(aux)
 
     def _labelData(self):
         index = self.ui.downloadTypeSelectionComboBox.currentIndex()
-        localData = self.data[index]
+        if self.audioOnlyBool == False:
+            localData = self.data[index]
+            self.ui.videoCodec.setText(
+                'Codec de Vídeo: ' + str(localData['videoCodec']))
+            self.ui.audioCodec.setText(
+                'Codec de Áudio: ' + str(localData['audioCodec']))
+            self.ui.downloadSize.setText(
+                'Tamanho (MB): ' + str(localData['size']))
+            self.ui.audioBitrate.setText(
+                'Bitrate: ' + str(localData['bitrate']))
 
-        self.ui.videoCodec.setText(
-            'Codec de Vídeo: ' + str(localData['videoCodec']))
-        self.ui.audioCodec.setText(
-            'Codec de Áudio: ' + str(localData['audioCodec']))
-        self.ui.downloadSize.setText('Tamanho (MB): ' + str(localData['size']))
-        self.ui.audioBitrate.setText('Bitrate: ' + str(localData['bitrate']))
+        else:
+            localData = self.audioData[index]
+            self.ui.videoCodec.setText(
+                'Codec de Vídeo: ' + 'APENAS AUDIO')
+            self.ui.audioCodec.setText(
+                'Codec de Áudio: ' + str(localData['audioCodec']))
+            self.ui.downloadSize.setText(
+                'Tamanho (MB): ' + str(localData['size']))
+            self.ui.audioBitrate.setText(
+                'Bitrate: ' + str(localData['bitrate']))
 
     def _downloadVideo(self):
         index = self.ui.downloadTypeSelectionComboBox.currentIndex()
-        itag = self.data[index]['itag']
+        if self.audioOnlyBool == False:
+            itag = self.data[index]['itag']
+        else:
+            itag = self.audioData[index]['itag']
 
         self.yt.setVideoQuality(itag=itag)
-        th = Thread(target=self.yt.downloadSelectedVideo)
+        th = Thread(target=self.yt.downloadSelectedVideo,
+                    args=(self.diferentPath,))
         th.start()
 
-        while self.yt.downloadComplete == False:
-            print(self.yt.downloadProgress)
-            time.sleep(0.8)
+        self.downloadDialog = DownloadDialog(self.yt)
+        self.downloadDialog.show()
 
-        print(self.yt.downloadProgress)
-        print(self.yt.downloadComplete)
+    def _audioData(self):
+        if self.audioOnlyBool == False:
+            self.audioOnlyBool = True
+            self._addVideoQualityToComboBox()
+
+            # Label data
+            return
+        else:
+            self.audioOnlyBool = False
+            self._addVideoQualityToComboBox()
+            return
+
+    def _changeSaveDirectory(self):
+        self.diferentPath = QFileDialog.getExistingDirectory(
+            self, 'Selecione a Pasta para salvar o arquivo.')
+        print(self.diferentPath)
+        return
