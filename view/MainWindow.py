@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QFileDialog
 from view.ui.MainWindow_ui import Ui_MainWindow
 from view.DownloadDialog import DownloadDialog
+from model.path import PathModel
 from controller.youtubeController import YoutubeController
 from threading import Thread
 
@@ -15,7 +16,7 @@ class MainWindow(QMainWindow):
         self.audioData = ''
         self.videoUrl = ''
         self.audioOnlyBool = False
-        self.diferentPath = None
+        self.diferentPath = PathModel().appUsrDir
         self.downloadDialog = None
 
         # Handle Clicks
@@ -26,6 +27,9 @@ class MainWindow(QMainWindow):
         self.ui.okButton.clicked.connect(self._downloadVideo)
         self.ui.onlyAudio.stateChanged.connect(self._audioData)
         self.ui.changeLocationButton.clicked.connect(self._changeSaveDirectory)
+        self.ui.cancelButton.clicked.connect(self.close)
+
+        self.ui.saveLocation.setText(str(self.diferentPath))
 
     def _fetchData(self):
         self.data = self.yt.jsonVideoInfo()
@@ -103,7 +107,7 @@ class MainWindow(QMainWindow):
                     args=(self.diferentPath,))
         th.start()
 
-        self.downloadDialog = DownloadDialog(self.yt)
+        self.downloadDialog = DownloadDialog(self.yt, self.diferentPath)
         self.downloadDialog.show()
 
     def _audioData(self):
@@ -121,5 +125,9 @@ class MainWindow(QMainWindow):
     def _changeSaveDirectory(self):
         self.diferentPath = QFileDialog.getExistingDirectory(
             self, 'Selecione a Pasta para salvar o arquivo.')
-        print(self.diferentPath)
+        if self.diferentPath == None:
+            self.ui.saveLocation.setText(str(PathModel().appUsrDir))
+        else:
+            self.ui.saveLocation.setText(str(self.diferentPath))
+
         return
