@@ -1,3 +1,3 @@
-pip install requirements.txt
+pip install -r requirements.txt
 pip install pyinstaller
-pyinstaller -w main.py
+pyinstaller -w --distpath ./dist/windows main.py
