@@ -1,9 +1,11 @@
+from PySide6.QtCore import QThreadPool
 from PySide6.QtWidgets import QMainWindow, QFileDialog
 from view.ui.MainWindow_ui import Ui_MainWindow
 from view.DownloadDialog import DownloadDialog
 from model.path import PathModel
 from controller.youtubeController import YoutubeController
 from threading import Thread
+from model.worker import Worker
 
 
 class MainWindow(QMainWindow):
@@ -18,16 +20,24 @@ class MainWindow(QMainWindow):
         self.audioOnlyBool = False
         self.diferentPath = PathModel().appUsrDir
         self.downloadDialog = None
+        self.setWindowTitle("2DYTDownloader")
 
         # Handle Clicks
-        self.ui.confirmLinkButton.clicked.connect(self._linkUpdate)
-        self.ui.videoLinkLineEdit.editingFinished.connect(self._linkUpdate)
+        self.ui.confirmLinkButton.clicked.connect(self._threadedFunction)
+        self.ui.videoLinkLineEdit.editingFinished.connect(
+            self._threadedFunction)
         self.ui.downloadTypeSelectionComboBox.currentIndexChanged.connect(
             self._labelData)
         self.ui.okButton.clicked.connect(self._downloadVideo)
         self.ui.onlyAudio.stateChanged.connect(self._audioData)
         self.ui.changeLocationButton.clicked.connect(self._changeSaveDirectory)
         self.ui.cancelButton.clicked.connect(self.close)
+
+        self.ui.videoCodec.setText('Codec de Vídeo: ')
+        self.ui.audioCodec.setText('Codec de Áudio: ')
+        self.ui.downloadSize.setText('Tamanho (MB): ')
+        self.ui.audioBitrate.setText('Bitrate: ')
+        self.ui.videoName.setText('Coloque o link de um vídeo')
 
         self.ui.saveLocation.setText(str(self.diferentPath))
 
@@ -49,10 +59,16 @@ class MainWindow(QMainWindow):
 
         if title != None or title != '':
             # https://www.pythonguis.com/tutorials/multithreading-pyside6-applications-qthreadpool/
+
             th = Thread(target=self._fetchData())
             th.start()
             th2 = Thread(target=self._fetchAudioData())
             th2.start()
+
+            """
+            self.threadpool.start(Worker(self._fetchData))
+            self.threadpool.start(Worker(self._fetchAudioData))
+            """
 
         self._addVideoQualityToComboBox()
         self._labelData()
@@ -131,3 +147,9 @@ class MainWindow(QMainWindow):
             self.ui.saveLocation.setText(str(self.diferentPath))
 
         return
+
+    def _threadedFunction(self):
+        self.threadpool = QThreadPool()
+        worker = Worker(self._linkUpdate)
+
+        self.threadpool.start(worker)

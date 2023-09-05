@@ -1,8 +1,8 @@
 import time
 from PySide6.QtWidgets import QWidget
-from PySide6.QtCore import QRunnable, QThreadPool
+from PySide6.QtCore import QThreadPool
 from view.ui.DownloadDialog_ui import Ui_downloadProgressDialog
-import os
+from model.worker import Worker
 
 
 class DownloadDialog(QWidget):
@@ -12,6 +12,7 @@ class DownloadDialog(QWidget):
         self.ui.setupUi(self)
         self.stream = stream
         self.path = path
+        self.setWindowTitle("Download Progress Dialog")
         self.ui.localSaveLabel.setText(str(self.path))
 
         self.ui.okButton.clicked.connect(self._openFile)
@@ -40,12 +41,3 @@ class DownloadDialog(QWidget):
         # Implement a way to open the file explorer
         self.close()
         pass
-
-
-class Worker(QRunnable):
-    def __init__(self, fn):
-        super(Worker, self).__init__()
-        self.fn = fn
-
-    def run(self):
-        self.fn()
