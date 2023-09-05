@@ -1,6 +1,6 @@
 # 2DYTDownloader
 
-A Python3, Qt powered application to Download Youtube videos.
+A Python3, Qt powered application to Download videos.
 Application isn't finish yet.
 
 
