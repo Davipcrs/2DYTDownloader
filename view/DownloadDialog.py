@@ -14,6 +14,7 @@ class DownloadDialog(QWidget):
         self.path = path
         self.setWindowTitle("Download Progress Dialog")
         self.ui.localSaveLabel.setText(str(self.path))
+        self.ui.okButton.setText('OK!')
 
         self.ui.okButton.clicked.connect(self._openFile)
 
