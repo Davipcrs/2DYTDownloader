@@ -22,9 +22,9 @@ class PathModel():
     def linuxOS(self):
         self.videoDir = str(self.home + "/")
         self.musicDir = str(self.home + "/")
-        self.appUsrDir = str(self.home + r"/2DYoutubeDownloader")
+        self.appUsrDir = str(self.home + r"/2DYTDownloader")
 
     def windowsOS(self):
         self.videoDir = str(self.home + "\\")
         self.musicDir = str(self.home + "\\")
-        self.appUsrDir = str(self.home + r"\2DYoutubeDownloader")
+        self.appUsrDir = str(self.home + r"\2DYTDownloader")
