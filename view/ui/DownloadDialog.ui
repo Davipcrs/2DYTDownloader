@@ -52,6 +52,12 @@
        <height>30</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::TabFocus</enum>
+     </property>
+     <property name="accessibleName">
+      <string>Local de salvamento</string>
+     </property>
      <property name="text">
       <string>TextLabel</string>
      </property>

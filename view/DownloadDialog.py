@@ -15,6 +15,7 @@ class DownloadDialog(QWidget):
         self.setWindowTitle("Download Progress Dialog")
         self.ui.localSaveLabel.setText(str(self.path))
         self.ui.okButton.setText('OK!')
+        self.ui.downloadProgressBar.setValue(0)
 
         self.ui.okButton.clicked.connect(self._openFile)
 
@@ -28,8 +29,11 @@ class DownloadDialog(QWidget):
                 int(self.stream.downloadProgress[0]))
             # print(self.stream.downloadProgress)
             time.sleep(0.8)
+            self.ui.downloadProgressBar.setAccessibleDescription(
+                str(self.stream.downloadProgress[0]) + "%")
 
         self.ui.downloadProgressBar.setValue(100)
+        self.stream.downloadComplete = False
         return
 
     def _threadedFunction(self):

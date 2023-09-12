@@ -42,6 +42,7 @@ class Ui_downloadProgressDialog(object):
         self.localSaveLabel.setSizePolicy(sizePolicy1)
         self.localSaveLabel.setMinimumSize(QSize(300, 30))
         self.localSaveLabel.setMaximumSize(QSize(16777215, 30))
+        self.localSaveLabel.setFocusPolicy(Qt.TabFocus)
         self.localSaveLabel.setAlignment(Qt.AlignHCenter|Qt.AlignTop)
 
         self.verticalLayout.addWidget(self.localSaveLabel)
@@ -84,6 +85,9 @@ class Ui_downloadProgressDialog(object):
 
     def retranslateUi(self, downloadProgressDialog):
         downloadProgressDialog.setWindowTitle(QCoreApplication.translate("downloadProgressDialog", u"Dialog", None))
+#if QT_CONFIG(accessibility)
+        self.localSaveLabel.setAccessibleName(QCoreApplication.translate("downloadProgressDialog", u"Local de salvamento", None))
+#endif // QT_CONFIG(accessibility)
         self.localSaveLabel.setText(QCoreApplication.translate("downloadProgressDialog", u"TextLabel", None))
         self.okButton.setText(QCoreApplication.translate("downloadProgressDialog", u"PushButton", None))
     # retranslateUi

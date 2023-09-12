@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Janela Principal</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -38,10 +38,20 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QLineEdit" name="videoLinkLineEdit"/>
+         <widget class="QLineEdit" name="videoLinkLineEdit">
+          <property name="accessibleName">
+           <string>Link do Video</string>
+          </property>
+          <property name="accessibleDescription">
+           <string>Insira o link do video</string>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="confirmLinkButton">
+          <property name="accessibleName">
+           <string>Confirmar link do video</string>
+          </property>
           <property name="text">
            <string>Link</string>
           </property>
@@ -59,6 +69,9 @@
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
             <widget class="QLabel" name="videoName">
+             <property name="focusPolicy">
+              <enum>Qt::TabFocus</enum>
+             </property>
              <property name="text">
               <string>TextLabel</string>
              </property>
@@ -69,6 +82,9 @@
            </item>
            <item>
             <widget class="QLabel" name="downloadSize">
+             <property name="focusPolicy">
+              <enum>Qt::TabFocus</enum>
+             </property>
              <property name="text">
               <string>TextLabel</string>
              </property>
@@ -79,6 +95,9 @@
            </item>
            <item>
             <widget class="QLabel" name="audioCodec">
+             <property name="focusPolicy">
+              <enum>Qt::TabFocus</enum>
+             </property>
              <property name="text">
               <string>TextLabel</string>
              </property>
@@ -89,6 +108,9 @@
            </item>
            <item>
             <widget class="QLabel" name="videoCodec">
+             <property name="focusPolicy">
+              <enum>Qt::TabFocus</enum>
+             </property>
              <property name="text">
               <string>TextLabel</string>
              </property>
@@ -99,6 +121,9 @@
            </item>
            <item>
             <widget class="QLabel" name="audioBitrate">
+             <property name="focusPolicy">
+              <enum>Qt::TabFocus</enum>
+             </property>
              <property name="text">
               <string>TextLabel</string>
              </property>
@@ -114,6 +139,9 @@
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QCheckBox" name="onlyAudio">
+            <property name="accessibleName">
+             <string>Selecionar apenas o audio</string>
+            </property>
             <property name="text">
              <string>Apenas áudio</string>
             </property>
@@ -127,7 +155,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="downloadTypeSelectionComboBox"/>
+           <widget class="QComboBox" name="downloadTypeSelectionComboBox">
+            <property name="accessibleName">
+             <string>Qualidade do video</string>
+            </property>
+            <property name="accessibleDescription">
+             <string>Selecione a qualidade do video ou o formato do audio</string>
+            </property>
+           </widget>
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -149,13 +184,19 @@
             </item>
             <item>
              <widget class="QPushButton" name="changeLocationButton">
+              <property name="accessibleName">
+               <string>Pasta de destino</string>
+              </property>
               <property name="text">
-               <string>Salvar Como</string>
+               <string>Pasta de destino</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLabel" name="saveLocation">
+              <property name="focusPolicy">
+               <enum>Qt::TabFocus</enum>
+              </property>
               <property name="text">
                <string>TextLabel</string>
               </property>

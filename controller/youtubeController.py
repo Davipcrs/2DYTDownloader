@@ -29,9 +29,11 @@ class YoutubeController():
 
     def _onComplete(self, chunk, file_handle):
         self.downloadComplete = True
+        self.downloadProgress = [0, 0, 0]
 
     # ================ #
     # External Methods
+
     def setVideoLink(self, link=None):
         while link == None or link == '':
             # CLI vs GUI Mode implement later

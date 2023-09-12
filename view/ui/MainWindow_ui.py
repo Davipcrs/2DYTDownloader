@@ -61,30 +61,35 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.videoName = QLabel(self.infoGroup)
         self.videoName.setObjectName(u"videoName")
+        self.videoName.setFocusPolicy(Qt.TabFocus)
         self.videoName.setWordWrap(True)
 
         self.verticalLayout_3.addWidget(self.videoName)
 
         self.downloadSize = QLabel(self.infoGroup)
         self.downloadSize.setObjectName(u"downloadSize")
+        self.downloadSize.setFocusPolicy(Qt.TabFocus)
         self.downloadSize.setWordWrap(True)
 
         self.verticalLayout_3.addWidget(self.downloadSize)
 
         self.audioCodec = QLabel(self.infoGroup)
         self.audioCodec.setObjectName(u"audioCodec")
+        self.audioCodec.setFocusPolicy(Qt.TabFocus)
         self.audioCodec.setWordWrap(True)
 
         self.verticalLayout_3.addWidget(self.audioCodec)
 
         self.videoCodec = QLabel(self.infoGroup)
         self.videoCodec.setObjectName(u"videoCodec")
+        self.videoCodec.setFocusPolicy(Qt.TabFocus)
         self.videoCodec.setWordWrap(True)
 
         self.verticalLayout_3.addWidget(self.videoCodec)
 
         self.audioBitrate = QLabel(self.infoGroup)
         self.audioBitrate.setObjectName(u"audioBitrate")
+        self.audioBitrate.setFocusPolicy(Qt.TabFocus)
         self.audioBitrate.setWordWrap(True)
 
         self.verticalLayout_3.addWidget(self.audioBitrate)
@@ -122,6 +127,7 @@ class Ui_MainWindow(object):
 
         self.saveLocation = QLabel(self.centralwidget)
         self.saveLocation.setObjectName(u"saveLocation")
+        self.saveLocation.setFocusPolicy(Qt.TabFocus)
         self.saveLocation.setWordWrap(True)
 
         self.verticalLayout_4.addWidget(self.saveLocation)
@@ -173,7 +179,16 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Janela Principal", None))
+#if QT_CONFIG(accessibility)
+        self.videoLinkLineEdit.setAccessibleName(QCoreApplication.translate("MainWindow", u"Link do Video", None))
+#endif // QT_CONFIG(accessibility)
+#if QT_CONFIG(accessibility)
+        self.videoLinkLineEdit.setAccessibleDescription(QCoreApplication.translate("MainWindow", u"Insira o link do video", None))
+#endif // QT_CONFIG(accessibility)
+#if QT_CONFIG(accessibility)
+        self.confirmLinkButton.setAccessibleName(QCoreApplication.translate("MainWindow", u"Confirmar link do video", None))
+#endif // QT_CONFIG(accessibility)
         self.confirmLinkButton.setText(QCoreApplication.translate("MainWindow", u"Link", None))
         self.infoGroup.setTitle(QCoreApplication.translate("MainWindow", u"Informa\u00e7\u00f5es", None))
         self.videoName.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
@@ -181,9 +196,21 @@ class Ui_MainWindow(object):
         self.audioCodec.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.videoCodec.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.audioBitrate.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+#if QT_CONFIG(accessibility)
+        self.onlyAudio.setAccessibleName(QCoreApplication.translate("MainWindow", u"Selecionar apenas o audio", None))
+#endif // QT_CONFIG(accessibility)
         self.onlyAudio.setText(QCoreApplication.translate("MainWindow", u"Apenas \u00e1udio", None))
         self.downloadBestQuality.setText(QCoreApplication.translate("MainWindow", u"Melhor Qualidade", None))
-        self.changeLocationButton.setText(QCoreApplication.translate("MainWindow", u"Salvar Como", None))
+#if QT_CONFIG(accessibility)
+        self.downloadTypeSelectionComboBox.setAccessibleName(QCoreApplication.translate("MainWindow", u"Qualidade do video", None))
+#endif // QT_CONFIG(accessibility)
+#if QT_CONFIG(accessibility)
+        self.downloadTypeSelectionComboBox.setAccessibleDescription(QCoreApplication.translate("MainWindow", u"Selecione a qualidade do video ou o formato do audio", None))
+#endif // QT_CONFIG(accessibility)
+#if QT_CONFIG(accessibility)
+        self.changeLocationButton.setAccessibleName(QCoreApplication.translate("MainWindow", u"Pasta de destino", None))
+#endif // QT_CONFIG(accessibility)
+        self.changeLocationButton.setText(QCoreApplication.translate("MainWindow", u"Pasta de destino", None))
         self.saveLocation.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.cancelButton.setText(QCoreApplication.translate("MainWindow", u"Cancelar", None))
         self.okButton.setText(QCoreApplication.translate("MainWindow", u"Baixar", None))
