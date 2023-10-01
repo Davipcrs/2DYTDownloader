@@ -1,7 +1,6 @@
 # 2DYTDownloader
 
-A Python3, Qt powered application to Download videos.
-Application isn't finish yet./
+A Python3, Qt powered application to Download videos.  
 
 *this app has been made only for learning purpose.*
 
